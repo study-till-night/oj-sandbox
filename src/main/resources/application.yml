@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: oj-codesandbox
+server:
+  port: 8081
+
+sandbox:
+  safety:
+    blackWordList: ["File", "exec", "Runtime","write","read"]
