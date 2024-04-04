@@ -9,7 +9,7 @@ import com.shuking.ojcodesandbox.model.ExecuteCodeResponse;
 import com.shuking.ojcodesandbox.model.ExecuteMessage;
 import com.shuking.ojcodesandbox.model.JudgeInfo;
 import com.shuking.ojcodesandbox.util.ProcessUtil;
-import io.micrometer.common.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,7 +34,7 @@ public class JavaNativeCodeSandBox implements CodeSandBox {
     // 临时文件夹名称
     private static final String TEMP_DIR_PATH = "tmpCode";
     // 主类名称要求必须与文件名一致才能编译通过
-    private static final String DEFAULT_CLASS_NAME = "Main.java";
+    private static final String DEFAULT_CLASS_NAME = "testCode/Main.java";
 
     // 字典树初始化
     static {
@@ -156,7 +156,7 @@ public class JavaNativeCodeSandBox implements CodeSandBox {
         // judgeInfo.setMemory();
         judgeInfo.setTime(maxTimeUsed);
         executeCodeResponse.setJudgeInfo(judgeInfo);
-
+        executeCodeResponse.setOutputList(outputList);
         // 5--清理临时生成的文件
         if (FileUtil.exist(userCodePath)) {
             FileUtil.del(userCodePath);

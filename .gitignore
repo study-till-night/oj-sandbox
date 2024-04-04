@@ -1,6 +1,7 @@
 HELP.md
 target/
 tmpCode/
+src/main/resources/testCode
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/

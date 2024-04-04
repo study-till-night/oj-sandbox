@@ -15,4 +15,6 @@ public class ExecuteMessage {
     private String errorMessage;
     // 程序执行耗时
     private Long time;
+    //程序占用内存
+    private Long memory;
 }
