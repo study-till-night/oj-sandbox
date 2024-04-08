@@ -40,14 +40,10 @@ public abstract class JavaCodeSandBoxTemplate implements CodeSandBox {
 
         //        2. 编译代码，得到 class 文件
         ExecuteMessage compileFileExecuteMessage = compileFile(userCodeFile);
-        if (compileFileExecuteMessage.getExitValue() != 0) {
-            return getExeResponse("编译失败");
-        }
+
         //          3. 执行代码，得到输出结果
         List<ExecuteMessage> executeMessageList = runFile(userCodeFile, inputList);
-        if (ObjectUtil.isNull(executeMessageList)) {
-            return getExeResponse("执行失败");
-        }
+
         //        4. 收集整理输出结果
         ExecuteCodeResponse outputResponse = getOutputResponse(executeMessageList);
 
@@ -56,6 +52,7 @@ public abstract class JavaCodeSandBoxTemplate implements CodeSandBox {
         if (!b) {
             log.error("deleteFile error, userCodeFilePath = {}", userCodeFile.getAbsolutePath());
         }
+        System.out.println(outputResponse);
         return outputResponse;
     }
 
@@ -91,13 +88,13 @@ public abstract class JavaCodeSandBoxTemplate implements CodeSandBox {
         String compileCmd = String.format("javac -encoding utf-8 %s", userCodeFile.getAbsolutePath());
         try {
             Process compileProcess = Runtime.getRuntime().exec(compileCmd);
-            ExecuteMessage executeMessage = ProcessUtils.runProcess(compileProcess, "编译");
+            ExecuteMessage executeMessage = ProcessUtils.runProcess(compileProcess, "compile");
             if (executeMessage.getExitValue() != 0) {
-                throw new RuntimeException("编译错误");
+                throw new RuntimeException("compile error");
             }
             return executeMessage;
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("compile error", e);
         }
     }
 
@@ -122,16 +119,18 @@ public abstract class JavaCodeSandBoxTemplate implements CodeSandBox {
                         Thread.sleep(TIME_OUT);
                         runProcess.destroy();
                     } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
+                        throw new RuntimeException("execute error",e);
                     }
                 }).start();
-                ExecuteMessage executeMessage = ProcessUtils.runProcess(runProcess, "运行");
+                // ExecuteMessage executeMessage = ProcessUtils.runProcess(runProcess, "运行");
+                ExecuteMessage executeMessage = ProcessUtils.runInterActiveProcess(runProcess, inputArgs, "execute");
+
                 if (executeMessage.getExitValue() != 0) {
-                    return null;
+                    throw new RuntimeException("execute error");
                 }
                 executeMessageList.add(executeMessage);
             } catch (Exception e) {
-                throw new RuntimeException("执行错误", e);
+                throw new RuntimeException("execute error", e);
             }
         }
         return executeMessageList;
@@ -199,6 +198,7 @@ public abstract class JavaCodeSandBoxTemplate implements CodeSandBox {
     public ExecuteCodeResponse getExeResponse(String errMsg) {
         return ExecuteCodeResponse.builder().outputList(new ArrayList<>())
                 // 2--代码沙箱自身错误
-                .judgeInfo(new JudgeInfo()).message(errMsg).status(2).build();
+                .judgeInfo(new JudgeInfo(errMsg, null, null))
+                .message(errMsg).status(2).build();
     }
 }

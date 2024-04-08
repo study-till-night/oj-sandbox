@@ -12,6 +12,7 @@ import com.shuking.ojcodesandbox.model.ExecuteCodeRequest;
 import com.shuking.ojcodesandbox.model.ExecuteCodeResponse;
 import com.shuking.ojcodesandbox.model.ExecuteMessage;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
 
 import java.io.Closeable;
@@ -24,6 +25,7 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
+@Component
 public class JavaDockerCodeSandBox extends JavaCodeSandBoxTemplate {
     // 超时时间
     private static final long TIME_OUT = 5000L;

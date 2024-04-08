@@ -31,6 +31,7 @@ import java.util.concurrent.TimeUnit;
  */
 @SuppressWarnings("all")
 @Slf4j
+@Deprecated
 public class JavaDockerCodeSandBoxOld implements CodeSandBox {
 
 

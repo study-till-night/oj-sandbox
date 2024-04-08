@@ -24,6 +24,7 @@ import java.util.UUID;
  * java原生代码沙箱实现
  */
 // @SuppressWarnings("all")
+@Deprecated
 public class JavaNativeCodeSandBoxOld implements CodeSandBox {
 
     // 敏感词列表
@@ -35,7 +36,7 @@ public class JavaNativeCodeSandBoxOld implements CodeSandBox {
     // 临时文件夹名称
     private static final String TEMP_DIR_PATH = "tmpCode";
     // 主类名称要求必须与文件名一致才能编译通过
-    private static final String DEFAULT_CLASS_NAME = "testCode/Main.java";
+    private static final String DEFAULT_CLASS_NAME = "Main.java";
 
     // 字典树初始化
     static {

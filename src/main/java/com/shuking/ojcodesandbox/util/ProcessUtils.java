@@ -2,9 +2,11 @@ package com.shuking.ojcodesandbox.util;
 
 import com.shuking.ojcodesandbox.model.ExecuteMessage;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.StopWatch;
 
 import java.io.*;
+import java.util.ArrayList;
 
 @Slf4j
 public class ProcessUtils {
@@ -29,11 +31,11 @@ public class ProcessUtils {
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
                 // 按行得到编译输出信息
                 String outPutLine;
-                StringBuilder outPutBuilder = new StringBuilder();
+                ArrayList<String> outputStrList = new ArrayList<>();
                 while ((outPutLine = bufferedReader.readLine()) != null) {
-                    outPutBuilder.append(outPutLine);
+                    outputStrList.add(outPutLine);
                 }
-                executeMessage.setMessage(outPutBuilder.toString());
+                executeMessage.setMessage(StringUtils.join(outputStrList,"\n"));
             } else {
                 log.info("{} 失败", msg);
                 // 分批获取进程正常输出
@@ -49,14 +51,14 @@ public class ProcessUtils {
                 BufferedReader errorBufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
                 // 按行得到编译输出信息
                 String errorOutPutLine;
-                StringBuilder errorOutPutBuilder = new StringBuilder();
+                ArrayList<String> outputStrList = new ArrayList<>();
                 while ((errorOutPutLine = errorBufferedReader.readLine()) != null) {
-                    errorOutPutBuilder.append(errorOutPutLine);
+                    outputStrList.add(errorOutPutLine);
                 }
-                executeMessage.setErrorMessage(errorOutPutBuilder.toString());
+                executeMessage.setMessage(StringUtils.join(outputStrList,"\n"));
             }
         } catch (IOException | InterruptedException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(String.format("%s error",msg),e);
         }
         return executeMessage;
     }
@@ -98,11 +100,11 @@ public class ProcessUtils {
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
                 // 按行得到编译输出信息
                 String outPutLine;
-                StringBuilder outPutBuilder = new StringBuilder();
+                ArrayList<String> outputStrList = new ArrayList<>();
                 while ((outPutLine = bufferedReader.readLine()) != null) {
-                    outPutBuilder.append(outPutLine);
+                    outputStrList.add(outPutLine);
                 }
-                executeMessage.setMessage(outPutBuilder.toString());
+                executeMessage.setMessage(StringUtils.join(outputStrList,"\n"));
                 bufferedReader.close();
             } else {
                 log.info("{} 失败", msg);
@@ -110,11 +112,11 @@ public class ProcessUtils {
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
                 // 按行得到编译输出信息
                 String outPutLine;
-                StringBuilder outPutBuilder = new StringBuilder();
+                ArrayList<String> outputStrList = new ArrayList<>();
                 while ((outPutLine = bufferedReader.readLine()) != null) {
-                    outPutBuilder.append(outPutLine);
+                    outputStrList.add(outPutLine);
                 }
-                executeMessage.setMessage(outPutBuilder.toString());
+                executeMessage.setMessage(StringUtils.join(outputStrList,"\n"));
                 // 分批获取进程错误输出
                 BufferedReader errorBufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
                 // 按行得到编译输出信息
@@ -131,13 +133,9 @@ public class ProcessUtils {
             outputStreamWriter.close();
             process.destroy();
         } catch (IOException | InterruptedException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(String.format("%s error",msg),e);
         }
         System.out.println(executeMessage);
         return executeMessage;
-    }
-
-    public static ExecuteMessage runDockerProcess(){
-        return null;
     }
 }
