@@ -4,7 +4,7 @@ spring:
   config:
     activate:
       on-profile:
-        - dev
+        - prod
 server:
   port: 8088
 
